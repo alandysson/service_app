@@ -27,7 +27,7 @@ const staticalData = [
    { serviceCod: '5', patient: 'Ximbau', doctor: 'Lebron' }
 ]
 export const ListServices = () => {
-   const [modalVisible, setModalVisible] = useState(true);
+   const [modalVisible, setModalVisible] = useState(false);
    const renderItem = ({ item }: ItemProps) => (
       <Card>
          <Row>
@@ -58,17 +58,16 @@ export const ListServices = () => {
          >
             <ModalContainer>
                <ModalView>
-                  <Text style={{ fontSize: 20, paddingTop: 6, paddingBottom: 6 }}>Alan Rolim</Text>
+                  <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
+                     <Text style={{ fontSize: 20, paddingTop: 6, paddingBottom: 6 }}>Alan Rolim</Text>
+                     <Pressable
+                        onPress={() => setModalVisible(!modalVisible)}
+                     >
+                        <TextExit>X</TextExit>
+                     </Pressable>
+                  </View>
                   <Separate />
-                  <Pressable
-                     onPress={() => setModalVisible(!modalVisible)}
-                  >
-                     <Text style={{ paddingTop: 6, paddingBottom: 6 }}>Pré-exames</Text>
-                     <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
-                        <Text></Text>
-                        <TextExit>Fechar X</TextExit>
-                     </View>
-                  </Pressable>
+                  <Text style={{ paddingTop: 6, paddingBottom: 6 }}>Pré-exames</Text>
                </ModalView>
             </ModalContainer>
          </Modal>

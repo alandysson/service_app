@@ -15,10 +15,10 @@ export function Home() {
          <Search
             source={require("../../assets/images/icon_2.png")}
          />
-         <ListServices />
          <ButtonContainer>
             <Button onPress={() => navigation.navigate('Novo Paciente')} title='Cadastrar Paciente' />
          </ButtonContainer>
+         <ListServices />
       </View>
    )
 }

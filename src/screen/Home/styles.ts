@@ -6,15 +6,14 @@ export const Input = styled.TextInput`
    background: #fff;
    border-radius: 3px;
    height: 38px;
-   margin: 30px 10px;
+   margin: 15px 10px;
    padding: 10px;
    margin-bottom: 20px;
    font-size: 15px;
 `
 
 export const ButtonContainer = styled.View`
-   flex: 1;
-   margin-bottom: 5px;
+   margin-bottom: 15px;
    justify-content: flex-end;
    align-items: center;
 `
@@ -24,5 +23,5 @@ export const Search = styled.Image`
    height: 20px;
    position: absolute;
    right: 30px;
-   top: 38px;
+   top: 24px;
 `
