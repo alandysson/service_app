@@ -52,11 +52,18 @@ export const TextButton = styled.Text<IProps>`
    }}
 `
 
-export const ModalContainer = styled.View`
+export const ModalContainer = styled.View<IProps>`
    flex: 1;
+   background-color: #f3f3f3; // i dont know why but put color.gray get different color
    align-items: center;
    justify-content: center;
-   background-color: rgba(0,0,0,0.5);
+   ${props => {
+      if (props.variant == VARIANT.SECONDARY) {
+         return `
+          background-color: rgba(0,0,0,0.5);
+        `
+      }
+   }}
 `
 
 export const ModalView = styled.View`
