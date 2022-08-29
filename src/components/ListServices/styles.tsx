@@ -82,4 +82,6 @@ export const TextExit = styled.Text`
    color: ${theme.color.fontWhite};
    border-radius: 3px;
    padding: 6px;
+   height: 30px;
+   font-size: 14px;
 `
