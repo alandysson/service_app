@@ -1,10 +1,6 @@
 import styled from "styled-components/native";
 import { theme } from "../../styles/theme";
-
-enum VARIANT {
-   PRIMARY,
-   SECONDARY
-}
+import { VARIANT } from "../../types";
 interface IProps {
    variant?: VARIANT
 }

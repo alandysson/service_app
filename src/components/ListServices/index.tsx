@@ -1,57 +1,33 @@
 import React, { useEffect, useState } from "react"
-import { Alert, FlatList, Modal, Pressable, Text, View } from "react-native"
+import { Alert, FlatList, Modal, Pressable, Text, View, ActivityIndicator } from "react-native"
 import { LittleBtn, ModalContainer, ModalView, Row, Separate, TextButton, TextExit } from "./styles"
 import { Card } from "../../styles/global"
 import { theme } from "../../styles/theme"
 import CheckBox from '@react-native-community/checkbox';
-
-enum VARIANT {
-   PRIMARY,
-   SECONDARY
-}
-
-type ItemProps = {
-   serviceCod: string,
-   patient: string,
-   doctor: string,
-   refration: boolean,
-   tono: boolean,
-   eyedrop1: boolean,
-   eyedrop2: boolean,
-   eyedrop3: boolean
-}
+import { request } from "../service/api"
+import { fetchToDo } from "../service"
+import { ItemProps, VARIANT } from "../../types"
+import { useIsFocused } from "@react-navigation/native"
 
 type ServiceProps = {
    item: ItemProps,
 }
 
-const staticalData = [
-   {
-      serviceCod: '1', patient: 'Alan', doctor: 'Joao', refration: false,
-      tono: false,
-      eyedrop1: false,
-      eyedrop2: false,
-      eyedrop3: false
-   },
-   {
-      serviceCod: '2', patient: 'James', doctor: 'Lebron', refration: false,
-      tono: false,
-      eyedrop1: false,
-      eyedrop2: false,
-      eyedrop3: false
-   },
-   // { serviceCod: '3', patient: 'Ciçu', doctor: 'Tonho' },
-   // { serviceCod: '4', patient: 'Xuxa', doctor: 'Paulo' },
-   // { serviceCod: '5', patient: 'Ximbau', doctor: 'Lebron' }
-]
 export const ListServices = () => {
    const [data, setData] = useState<Array<ItemProps>>();
-   const [modalVisible, setModalVisible] = useState(false);
    const [currentItem, setCurrentItem] = useState<ItemProps>({} as ItemProps);
+   const [modalVisible, setModalVisible] = useState(false);
    const [namePatientModal, setNamePatienteModal] = useState<string>("");
-
+   const [load, setLoad] = useState<boolean>(true);
+   const isFocused = useIsFocused();
    const renderItem = ({ item }: ServiceProps) => (
       <>
+         {/* {Object.values(item.exams).map(value => console.log(value))} */}
+         {/* <View style={{ position: 'absolute', right: 130 }}>
+            <LittleBtn>
+               <TextButton>Concluir</TextButton>
+            </LittleBtn>
+         </View> */}
          <Card>
             <Row>
                <View>
@@ -75,9 +51,10 @@ export const ListServices = () => {
       const cItem = { ...currentItem, [name]: value }
       setCurrentItem(cItem)
       const filteredCurrentItem = data?.filter(function (value) {
-         return value.serviceCod != currentItem.serviceCod
+         return value.id != currentItem.id
       })
       filteredCurrentItem?.push(cItem)
+      filteredCurrentItem?.reverse()
       setData(filteredCurrentItem)
    }
    const cheboxItem = (value: boolean, name: string) => (
@@ -113,10 +90,10 @@ export const ListServices = () => {
                   <Separate />
                   <Text style={{ paddingTop: 6, paddingBottom: 6 }}>Pré-exames</Text>
                   <View style={{ flexDirection: "row", alignItems: "center", marginBottom: 10 }}>
-                     {cheboxItem(item.refration, 'refration')}
+                     {cheboxItem(item.exams?.refration, 'refration')}
                      <Text>Refração</Text>
 
-                     {cheboxItem(item.tono, 'tono')}
+                     {cheboxItem(item.exams?.tono, 'tono')}
                      <Text>Tonometria</Text>
                   </View>
                   <Separate />
@@ -134,15 +111,24 @@ export const ListServices = () => {
          </Modal>
       </ModalContainer>
    )
+   async function requestData() {
+      await fetchToDo<Array<ItemProps>>("/data", { method: 'GET' })
+         .then((toDoItem) => {
+            setData(toDoItem);
+            setLoad(false)
+         }).catch((error) => Alert.alert(error));
+   }
    useEffect(() => {
-      setData(staticalData)
-   }, [])
-   return (
+      if (isFocused) {
+         requestData()
+      }
+   }, [isFocused])
+   return load ? <ActivityIndicator size="large" color={theme.color.primary} /> : (
       <>
          <FlatList
             data={data}
             renderItem={renderItem}
-            keyExtractor={item => item.serviceCod}
+            keyExtractor={(item) => item.id === null ? "0" : item.id}
          />
          {showModal(namePatientModal, currentItem)}
       </>
