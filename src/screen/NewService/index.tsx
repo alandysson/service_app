@@ -1,17 +1,51 @@
-import React, { useState } from 'react'
-import { SafeAreaView, View } from "react-native";
+import React, { useEffect, useState } from 'react'
+import { Alert, SafeAreaView, ToastAndroid, View } from "react-native";
 import { Picker } from '@react-native-picker/picker'
 import { Border, Container, Input } from './style';
 import { Button } from '../../components/Button';
+import { fetchToDo } from '../../components/service';
+import { useNavigation } from '@react-navigation/native';
+import { HomeScreenNavigationProp } from '../../navigation/types';
 
+interface IDoctor {
+   id: string,
+   name: string
+}
 export default function PatientForm() {
+   const navigation = useNavigation<HomeScreenNavigationProp>();
+
    const [newService, setNewService] = useState({
       patient: "",
       doctor: "",
+      exams: {
+         refration: false,
+         tono: false,
+      },
+      eyedrop1: false,
+      eyedrop2: false,
+      eyedrop3: false
    })
-   function addNewPatient() {
-      console.log(newService.patient === "" || newService.doctor === "")
+   const [doctors, setDoctors] = useState<Array<IDoctor>>()
+   async function addNewPatient() {
+      console.log(newService)
+      await fetchToDo("/data", {
+         method: 'POST',
+         headers: { 'Content-Type': 'application/json;charset=utf-8' },
+         body: JSON.stringify(newService)
+      }).then(() => {
+         ToastAndroid.show('Paciente adicionado a lista!', 2000)
+         navigation.goBack()
+      }).catch((error) => Alert.alert(error));
    }
+   async function requestDoctors() {
+      await fetchToDo<Array<IDoctor>>("/doctors", {
+         method: 'GET',
+      }).then((response) => setDoctors(response))
+         .catch((error) => Alert.alert(error));
+   }
+   useEffect(() => {
+      requestDoctors()
+   }, [])
    return (
       <SafeAreaView style={{ flex: 1 }}>
          <Container>
@@ -28,8 +62,9 @@ export default function PatientForm() {
                      setNewService({ ...newService, doctor: itemValue })
                   }>
                   <Picker.Item label="Selecione o Médico" value="" />
-                  <Picker.Item label="Java" value="java" />
-                  <Picker.Item label="JavaScript" value="js" />
+                  {doctors?.map((doctor) => (
+                     <Picker.Item key={doctor.id} label={doctor.name} value={doctor.name} />
+                  ))}
                </Picker>
             </Border>
             <View style={{ alignItems: 'center', marginTop: 30 }}>
