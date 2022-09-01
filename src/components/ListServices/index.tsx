@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react"
-import { Alert, FlatList, Modal, Pressable, Text, View, ActivityIndicator } from "react-native"
+import { Alert, FlatList, Modal, Pressable, Text, View, ActivityIndicator, Image, TouchableOpacity } from "react-native"
 import { LittleBtn, ModalContainer, ModalView, Row, Separate, TextButton, TextExit } from "./styles"
 import { Card } from "../../styles/global"
 import { theme } from "../../styles/theme"
@@ -23,25 +23,33 @@ export const ListServices = () => {
    const renderItem = ({ item }: ServiceProps) => (
       <>
          {/* {Object.values(item.exams).map(value => console.log(value))} */}
-         {/* <View style={{ position: 'absolute', right: 130 }}>
-            <LittleBtn>
-               <TextButton>Concluir</TextButton>
-            </LittleBtn>
-         </View> */}
          <Card>
             <Row>
                <View>
                   <Text style={{ color: theme.color.grayDark, padding: 3 }}>Paciente: {item.patient}</Text>
                   <Text style={{ color: theme.color.primaryDark, padding: 3 }}>Médico: {item.doctor}</Text>
                </View>
+               <View style={{ position: "absolute", right: 100, top: 20 }}>
+                  <LittleBtn>
+                     <TextButton>Concluir</TextButton>
+                  </LittleBtn>
+               </View>
                <View style={{ justifyContent: 'center' }}>
-                  <LittleBtn onPress={() => {
+                  <TouchableOpacity onPress={() => {
                      setModalVisible(true)
                      setNamePatienteModal(item.patient)
                      setCurrentItem(item)
-                  }} variant={VARIANT.PRIMARY}>
-                     <TextButton>Maquinas</TextButton>
-                  </LittleBtn>
+                  }}
+                     disabled={true}>
+                     <Image
+                        source={require("../../assets/images/exam.png")}
+                        style={{
+                           width: 45,
+                           height: 45,
+                           tintColor: theme.color.primaryDark,
+                        }}
+                     />
+                  </TouchableOpacity>
                </View>
             </Row>
          </Card>

@@ -6,7 +6,7 @@ export const StyledButton = styled.TouchableOpacity`
    align-items: center;
    background-color: ${theme.color.primaryDark};
    border-radius: 3px;
-   height: 38px;
+   height: 33px;
    width: 150px;
    &:disabled{
       opacity:0.6 ;
@@ -15,5 +15,5 @@ export const StyledButton = styled.TouchableOpacity`
 
 export const TxtButton = styled.Text`
    color: ${theme.color.fontWhite};
-   font-size: 16px;
+   font-size: 15px;
 `

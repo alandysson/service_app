@@ -10,7 +10,7 @@ export const Input = styled.TextInput`
    border: 1px solid ${theme.color.primary};
    background-color: #fff;
    border-radius: 3px;
-   height: 48px;
+   height: 43px;
    padding: 10px;
    margin-bottom: 20px;
    font-size: 15px;
