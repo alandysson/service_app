@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react"
 import { Alert, FlatList, Modal, Pressable, Text, View, ActivityIndicator, Image, TouchableOpacity } from "react-native"
-import { LittleBtn, ModalContainer, ModalView, Row, Separate, TextButton, TextExit } from "./styles"
+import { LittleBtn, ModalContainer, ModalView, Row, RowAlignCenter, Separate, TextButton, TextDescription, TextExit, TextTitleCheckBox, TitleModal } from "./styles"
 import { Card } from "../../styles/global"
 import { theme } from "../../styles/theme"
 import CheckBox from '@react-native-community/checkbox';
@@ -21,49 +21,57 @@ export const ListServices = () => {
    const [load, setLoad] = useState<boolean>(true);
    const isFocused = useIsFocused();
    const renderItem = ({ item }: ServiceProps) => (
-      <>
-         {/* {Object.values(item.exams).map(value => console.log(value))} */}
-         <Card>
-            <Row>
-               <View>
-                  <Text style={{ color: theme.color.grayDark, padding: 3 }}>Paciente: {item.patient}</Text>
-                  <Text style={{ color: theme.color.primaryDark, padding: 3 }}>Médico: {item.doctor}</Text>
-               </View>
+      <Card style={{
+         backgroundColor: item.exams?.total === 2 ? "rgba(0,0,0,0.5)" : theme.color.fontWhite
+      }}>
+         <Row>
+            <View>
+               <TextDescription variant={VARIANT.SECONDARY}>Paciente: {item.patient}</TextDescription>
+               <TextDescription variant={VARIANT.PRIMARY}>Médico: {item.doctor}</TextDescription>
+            </View>
+            {item.exams?.total === 2 &&
                <View style={{ position: "absolute", right: 100, top: 20 }}>
-                  <LittleBtn>
+                  <LittleBtn onPress={() => {
+                     finishServiceItem(item)
+                  }}>
                      <TextButton>Concluir</TextButton>
                   </LittleBtn>
                </View>
-               <View style={{ justifyContent: 'center' }}>
-                  <TouchableOpacity onPress={() => {
-                     setModalVisible(true)
-                     setNamePatienteModal(item.patient)
-                     setCurrentItem(item)
-                  }}
-                     disabled={true}>
-                     <Image
-                        source={require("../../assets/images/exam.png")}
-                        style={{
-                           width: 45,
-                           height: 45,
-                           tintColor: theme.color.primaryDark,
-                        }}
-                     />
-                  </TouchableOpacity>
-               </View>
-            </Row>
-         </Card>
-      </>
+            }
+            <View style={{ justifyContent: 'center' }}>
+               <TouchableOpacity onPress={() => {
+                  setModalVisible(true)
+                  setNamePatienteModal(item.patient)
+                  setCurrentItem(item)
+               }}>
+                  <Image
+                     source={require("../../assets/images/exam.png")}
+                     style={{
+                        width: 45,
+                        height: 45,
+                        tintColor: theme.color.primaryDark,
+                     }}
+                  />
+               </TouchableOpacity>
+            </View>
+         </Row>
+      </Card>
    )
    function changeCurrentItem(value: boolean, name: string) {
-      const cItem = { ...currentItem, [name]: value }
+      let countTotalPreExams = currentItem.exams?.total + 1
+      const cItem = {
+         ...currentItem, exams: {
+            ...currentItem.exams,
+            [name]: value,
+            total: countTotalPreExams
+         }
+      }
       setCurrentItem(cItem)
-      const filteredCurrentItem = data?.filter(function (value) {
-         return value.id != currentItem.id
+      data?.map((value, index) => {
+         if (value.id === cItem.id) {
+            data[index] = cItem
+         }
       })
-      filteredCurrentItem?.push(cItem)
-      filteredCurrentItem?.reverse()
-      setData(filteredCurrentItem)
    }
    const cheboxItem = (value: boolean, name: string) => (
       <CheckBox
@@ -88,7 +96,7 @@ export const ListServices = () => {
             <ModalContainer variant={VARIANT.SECONDARY}>
                <ModalView>
                   <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
-                     <Text style={{ fontSize: 20, paddingTop: 6, paddingBottom: 6 }}>{namePatientModal}</Text>
+                     <TitleModal>{namePatientModal}</TitleModal>
                      <Pressable
                         onPress={() => setModalVisible(!modalVisible)}
                      >
@@ -96,29 +104,34 @@ export const ListServices = () => {
                      </Pressable>
                   </View>
                   <Separate />
-                  <Text style={{ paddingTop: 6, paddingBottom: 6 }}>Pré-exames</Text>
-                  <View style={{ flexDirection: "row", alignItems: "center", marginBottom: 10 }}>
-                     {cheboxItem(item.exams?.refration, 'refration')}
+                  <TextTitleCheckBox>Pré-exames</TextTitleCheckBox>
+                  <RowAlignCenter>
+                     {cheboxItem(item.exams?.refration !== undefined && item.exams.refration, 'refration')}
                      <Text>Refração</Text>
 
-                     {cheboxItem(item.exams?.tono, 'tono')}
+                     {cheboxItem(item.exams?.tono !== undefined && item.exams.tono, 'tono')}
                      <Text>Tonometria</Text>
-                  </View>
+                  </RowAlignCenter>
                   <Separate />
-                  <Text style={{ paddingTop: 6, paddingBottom: 6 }}>Colírios</Text>
-                  <View style={{ flexDirection: "row", alignItems: "center", marginBottom: 20 }}>
+                  <TextTitleCheckBox>Colírios</TextTitleCheckBox>
+                  <RowAlignCenter>
                      {cheboxItem(item.eyedrop1, 'eyedrop1')}
                      <Text>1</Text>
                      {cheboxItem(item.eyedrop2, 'eyedrop2')}
                      <Text>2</Text>
                      {cheboxItem(item.eyedrop3, 'eyedrop3')}
                      <Text>3</Text>
-                  </View>
+                  </RowAlignCenter>
                </ModalView>
             </ModalContainer>
          </Modal>
       </ModalContainer>
    )
+   function finishServiceItem(item: ItemProps) {
+      setData(data?.filter(function (value) {
+         return value.id !== item.id
+      }))
+   }
    async function requestData() {
       await fetchToDo<Array<ItemProps>>("/data", { method: 'GET' })
          .then((toDoItem) => {

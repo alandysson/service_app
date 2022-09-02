@@ -6,47 +6,25 @@
       "doctor": "Joao",
       "exams": {
         "refration": false,
-        "tono": false
+        "tono": false,
+        "total": 0
       },
       "eyedrop1": false,
       "eyedrop2": false,
       "eyedrop3": false
     },
     {
-      "id": "2",
-      "patient": "James",
-      "doctor": "Lebron",
+      "patient": "Juoaoak",
+      "doctor": "Lucas",
       "exams": {
         "refration": false,
-        "tono": false
-      },
-      "eyedrop1": false,
-      "eyedrop2": false,
-      "eyedrop3": false
-    },
-    {
-      "patient": "Pedrinho",
-      "doctor": "Paulo",
-      "exams": {
-        "refration": false,
-        "tono": false
+        "tono": false,
+        "total": 0
       },
       "eyedrop1": false,
       "eyedrop2": false,
       "eyedrop3": false,
-      "id": "NOvNeVq"
-    },
-    {
-      "patient": "Jotinha",
-      "doctor": "Tony",
-      "exams": {
-        "refration": false,
-        "tono": false
-      },
-      "eyedrop1": false,
-      "eyedrop2": false,
-      "eyedrop3": false,
-      "id": "Qd80T46"
+      "id": "GoqPu8z"
     }
   ],
   "doctors": [

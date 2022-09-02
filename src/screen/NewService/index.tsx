@@ -20,6 +20,7 @@ export default function PatientForm() {
       exams: {
          refration: false,
          tono: false,
+         total: 0
       },
       eyedrop1: false,
       eyedrop2: false,

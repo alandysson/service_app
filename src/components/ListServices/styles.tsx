@@ -81,3 +81,31 @@ export const TextExit = styled.Text`
    height: 30px;
    font-size: 14px;
 `
+export const TitleModal = styled.Text`
+   font-size: 20px;
+   padding: 6px 0px;
+`
+export const TextTitleCheckBox = styled.Text`
+   padding: 6px 0px;
+`
+
+export const RowAlignCenter = styled.View`
+   flex-direction: row;
+   align-items: center;
+   margin-bottom: 20px;
+`
+
+export const TextDescription = styled.Text<IProps>`
+   padding: 3px;
+   ${props => {
+      if (props.variant == VARIANT.SECONDARY) {
+         return `
+          color: ${theme.color.grayDark};
+        `
+      } else {
+         return `
+          color: ${theme.color.primaryDark};
+        `
+      }
+   }}
+`

@@ -8,8 +8,9 @@ export type ItemProps = {
    patient: string,
    doctor: string,
    exams: {
-      refration: boolean,
-      tono: boolean,
+      refration?: boolean,
+      tono?: boolean,
+      total: number
    },
    eyedrop1: boolean,
    eyedrop2: boolean,
