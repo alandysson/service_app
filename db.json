@@ -25,6 +25,19 @@
       "eyedrop2": false,
       "eyedrop3": false,
       "id": "GoqPu8z"
+    },
+    {
+      "patient": "juca",
+      "doctor": "Tony",
+      "exams": {
+        "refration": false,
+        "tono": false,
+        "total": 0
+      },
+      "eyedrop1": false,
+      "eyedrop2": false,
+      "eyedrop3": false,
+      "id": "cmV49uv"
     }
   ],
   "doctors": [

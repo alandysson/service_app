@@ -1,7 +1,12 @@
 import styled from "styled-components/native";
 import { theme } from "../../styles/theme";
 
+type IButtonContainer = {
+   isAdmin?: boolean
+}
+
 export const Input = styled.TextInput`
+   font-family: "Ubuntu-Regular";
    border: 1px solid ${theme.color.primary};
    background: #fff;
    border-radius: 3px;
@@ -12,10 +17,23 @@ export const Input = styled.TextInput`
    font-size: 15px;
 `
 
-export const ButtonContainer = styled.View`
+export const ButtonContainer = styled.View<IButtonContainer>`
+   ${props => {
+      if (props.isAdmin) {
+         return `
+            flex-direction: row;
+         `
+      } else {
+         return `
+            align-items: center;
+         `
+      }
+   }
+   }
+   justify-content: space-between;
    margin-bottom: 15px;
-   justify-content: flex-end;
-   align-items: center;
+   padding: 9px;
+   /* align-items: center; */
 `
 
 export const Search = styled.Image`
