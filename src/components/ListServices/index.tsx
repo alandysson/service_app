@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react"
 import { Alert, FlatList, Modal, Pressable, Text, View, ActivityIndicator, Image, TouchableOpacity } from "react-native"
 import { LittleBtn, ModalContainer, ModalView, Row, RowAlignCenter, Separate, TextButton, TextDescription, TextExit, TextTitleCheckBox, TitleModal } from "./styles"
-import { Card } from "../../styles/global"
+import { Card, TextStyled } from "../../styles/global"
 import { theme } from "../../styles/theme"
 import CheckBox from '@react-native-community/checkbox';
 import { request } from "../service/api"
@@ -107,20 +107,20 @@ export const ListServices = () => {
                   <TextTitleCheckBox>Pré-exames</TextTitleCheckBox>
                   <RowAlignCenter>
                      {cheboxItem(item.exams?.refration !== undefined && item.exams.refration, 'refration')}
-                     <Text>Refração</Text>
+                     <TextStyled>Refração</TextStyled>
 
                      {cheboxItem(item.exams?.tono !== undefined && item.exams.tono, 'tono')}
-                     <Text>Tonometria</Text>
+                     <TextStyled>Tonometria</TextStyled>
                   </RowAlignCenter>
                   <Separate />
                   <TextTitleCheckBox>Colírios</TextTitleCheckBox>
                   <RowAlignCenter>
                      {cheboxItem(item.eyedrop1, 'eyedrop1')}
-                     <Text>1</Text>
+                     <TextStyled>1</TextStyled>
                      {cheboxItem(item.eyedrop2, 'eyedrop2')}
-                     <Text>2</Text>
+                     <TextStyled>2</TextStyled>
                      {cheboxItem(item.eyedrop3, 'eyedrop3')}
-                     <Text>3</Text>
+                     <TextStyled>3</TextStyled>
                   </RowAlignCenter>
                </ModalView>
             </ModalContainer>

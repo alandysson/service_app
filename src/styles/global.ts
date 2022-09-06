@@ -7,3 +7,7 @@ export const Card = styled.View`
    padding: 15px;
    elevation: 5;
 `
+
+export const TextStyled = styled.Text`
+   font-family: "Ubuntu-Regular";
+`

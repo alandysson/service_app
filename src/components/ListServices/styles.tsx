@@ -1,4 +1,5 @@
 import styled from "styled-components/native";
+import { TextStyled } from "../../styles/global";
 import { theme } from "../../styles/theme";
 import { VARIANT } from "../../types";
 interface IProps {
@@ -34,7 +35,7 @@ export const LittleBtn = styled.TouchableOpacity<IProps>`
    width: 100px;
 `
 
-export const TextButton = styled.Text<IProps>`
+export const TextButton = styled(TextStyled) <IProps>`
       ${props => {
       if (props.variant == VARIANT.SECONDARY) {
          return `
@@ -73,7 +74,7 @@ export const Separate = styled.View`
    border: 0.5px solid ${theme.color.primary};
 `
 
-export const TextExit = styled.Text`
+export const TextExit = styled(TextStyled)`
    background-color: ${theme.color.primaryDark};
    color: ${theme.color.fontWhite};
    border-radius: 3px;
@@ -81,11 +82,11 @@ export const TextExit = styled.Text`
    height: 30px;
    font-size: 14px;
 `
-export const TitleModal = styled.Text`
+export const TitleModal = styled(TextStyled)`
    font-size: 20px;
    padding: 6px 0px;
 `
-export const TextTitleCheckBox = styled.Text`
+export const TextTitleCheckBox = styled(TextStyled)`
    padding: 6px 0px;
 `
 
@@ -95,7 +96,7 @@ export const RowAlignCenter = styled.View`
    margin-bottom: 20px;
 `
 
-export const TextDescription = styled.Text<IProps>`
+export const TextDescription = styled(TextStyled) <IProps>`
    padding: 3px;
    ${props => {
       if (props.variant == VARIANT.SECONDARY) {

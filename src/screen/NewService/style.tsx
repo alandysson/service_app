@@ -7,6 +7,7 @@ export const Container = styled.View`
 `
 
 export const Input = styled.TextInput`
+   font-family: "Ubuntu-Regular";
    border: 1px solid ${theme.color.primary};
    background-color: #fff;
    border-radius: 3px;

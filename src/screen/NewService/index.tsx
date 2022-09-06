@@ -28,7 +28,6 @@ export default function PatientForm() {
    })
    const [doctors, setDoctors] = useState<Array<IDoctor>>()
    async function addNewPatient() {
-      console.log(newService)
       await fetchToDo("/data", {
          method: 'POST',
          headers: { 'Content-Type': 'application/json;charset=utf-8' },
@@ -57,7 +56,8 @@ export default function PatientForm() {
             <Border>
                <Picker
                   dropdownIconColor={"#99CFFF"}
-                  style={{ color: "#BCBCBC" }}
+                  style={{ color: "#BCBCBC", }}
+                  itemStyle={{ fontFamily: 'Ubuntu-Regular', fontSize: 30 }}
                   selectedValue={newService.doctor}
                   onValueChange={(itemValue, _) =>
                      setNewService({ ...newService, doctor: itemValue })

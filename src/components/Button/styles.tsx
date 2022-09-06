@@ -1,10 +1,28 @@
 import styled from 'styled-components/native'
+import { TextStyled } from '../../styles/global';
 import { theme } from "../../styles/theme";
+import { VARIANT } from '../../types';
 
-export const StyledButton = styled.TouchableOpacity`
+type IStyledButton = {
+   variant?: VARIANT
+}
+
+export const StyledButton = styled.TouchableOpacity<IStyledButton>`
    justify-content: center;
    align-items: center;
-   background-color: ${theme.color.primaryDark};
+   ${props => {
+      switch (props.variant) {
+         case VARIANT.SECONDARY:
+            return `
+          background-color: ${theme.color.primary};
+        `;
+         case VARIANT.PRIMARY:
+         default:
+            return `
+          background-color: ${theme.color.primaryDark};
+        `;
+      }
+   }}
    border-radius: 3px;
    height: 33px;
    width: 150px;
@@ -13,7 +31,7 @@ export const StyledButton = styled.TouchableOpacity`
    }
 `
 
-export const TxtButton = styled.Text`
+export const TxtButton = styled(TextStyled)`
    color: ${theme.color.fontWhite};
    font-size: 15px;
 `
