@@ -32,7 +32,17 @@ export const ListServices = () => {
             {item.exams?.total === 2 &&
                <View style={{ position: "absolute", right: 100, top: 20 }}>
                   <LittleBtn onPress={() => {
-                     finishServiceItem(item)
+                     Alert.alert(
+                        "O Paciente foi atendido?",
+                        "Ao clicar em concluir ele saira da lista",
+                        [
+                           {
+                              text: "Não",
+                              style: "cancel"
+                           },
+                           { text: "Sim", onPress: () => finishServiceItem(item) }
+                        ]
+                     );
                   }}>
                      <TextButton>Concluir</TextButton>
                   </LittleBtn>
