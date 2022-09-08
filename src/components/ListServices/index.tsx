@@ -1,13 +1,14 @@
 import React, { useEffect, useState } from "react"
-import { Alert, FlatList, Modal, Pressable, Text, View, ActivityIndicator, Image, TouchableOpacity } from "react-native"
-import { LittleBtn, ModalContainer, ModalView, Row, RowAlignCenter, Separate, TextButton, TextDescription, TextExit, TextTitleCheckBox, TitleModal } from "./styles"
-import { Card, TextStyled } from "../../styles/global"
+import { Alert, FlatList, View, ActivityIndicator, TouchableOpacity } from "react-native"
+import { ExamImage, LittleBtn, Row, RowAlignCenter, Separate, TextButton, TextDescription, TextTitleCheckBox } from "./styles"
+import { Card } from "../../styles/global"
 import { theme } from "../../styles/theme"
-import CheckBox from '@react-native-community/checkbox';
 import { request } from "../service/api"
 import { fetchToDo } from "../service"
 import { ItemProps, VARIANT } from "../../types"
 import { useIsFocused } from "@react-navigation/native"
+import { CustomModal } from "../CustomModal"
+import { CustomCheckBox } from "../CustomCheckBox"
 
 type ServiceProps = {
    item: ItemProps,
@@ -20,53 +21,35 @@ export const ListServices = () => {
    const [namePatientModal, setNamePatienteModal] = useState<string>("");
    const [load, setLoad] = useState<boolean>(true);
    const isFocused = useIsFocused();
-   const renderItem = ({ item }: ServiceProps) => (
-      <Card style={{
-         backgroundColor: item.exams?.total === 2 ? "rgba(0,0,0,0.5)" : theme.color.fontWhite
-      }}>
-         <Row>
-            <View>
-               <TextDescription variant={VARIANT.SECONDARY}>Paciente: {item.patient}</TextDescription>
-               <TextDescription variant={VARIANT.PRIMARY}>Médico: {item.doctor}</TextDescription>
-            </View>
-            {item.exams?.total === 2 &&
-               <View style={{ position: "absolute", right: 100, top: 20 }}>
-                  <LittleBtn onPress={() => {
-                     Alert.alert(
-                        "O Paciente foi atendido?",
-                        "Ao clicar em Sim ele será removido da lista",
-                        [
-                           {
-                              text: "Não",
-                              style: "cancel"
-                           },
-                           { text: "Sim", onPress: () => finishServiceItem(item) }
-                        ]
-                     );
-                  }}>
-                     <TextButton>Concluir</TextButton>
-                  </LittleBtn>
-               </View>
-            }
-            <View style={{ justifyContent: 'center' }}>
-               <TouchableOpacity onPress={() => {
-                  setModalVisible(true)
-                  setNamePatienteModal(item.patient)
-                  setCurrentItem(item)
-               }}>
-                  <Image
-                     source={require("../../assets/images/exam.png")}
-                     style={{
-                        width: 45,
-                        height: 45,
-                        tintColor: theme.color.primaryDark,
-                     }}
-                  />
-               </TouchableOpacity>
-            </View>
-         </Row>
-      </Card>
+
+   async function requestData() {
+      await fetchToDo<Array<ItemProps>>("/data", { method: 'GET' })
+         .then((toDoItem) => {
+            setData(toDoItem);
+            setLoad(false)
+         }).catch((error) => Alert.alert(error));
+   }
+
+   function removeSelectedItemFromArray(item: ItemProps) {
+      setData(data?.filter(function (value) {
+         return value.id !== item.id
+      }))
+   }
+
+   const alertToFinishService = (item: ItemProps) => (
+      Alert.alert(
+         "O Paciente foi atendido?",
+         "Ao clicar em Sim ele será removido da lista",
+         [
+            {
+               text: "Não",
+               style: "cancel"
+            },
+            { text: "Sim", onPress: () => removeSelectedItemFromArray(item) }
+         ]
+      )
    )
+
    function changeCurrentItem(value: boolean, name: string) {
       let countTotalPreExams = currentItem.exams?.total + 1
       const cItem = {
@@ -83,85 +66,95 @@ export const ListServices = () => {
          }
       })
    }
-   const cheboxItem = (value: boolean, name: string) => (
-      <CheckBox
-         disabled={false}
-         value={value}
-         onValueChange={(newValue) => changeCurrentItem(newValue, name)}
-         tintColors={{ true: theme.color.primaryDark }}
-      />
-   )
-   const showModal = (namePatientModal: string, item: ItemProps) => (
-      <ModalContainer>
-         <Modal
-            animationType="slide"
-            transparent={true}
-            presentationStyle={"overFullScreen"}
-            visible={modalVisible}
-            onRequestClose={() => {
-               Alert.alert("Modal has been closed.");
-               setModalVisible(!modalVisible);
-            }}
-         >
-            <ModalContainer variant={VARIANT.SECONDARY}>
-               <ModalView>
-                  <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
-                     <TitleModal>{namePatientModal}</TitleModal>
-                     <Pressable
-                        onPress={() => setModalVisible(!modalVisible)}
-                     >
-                        <TextExit>X</TextExit>
-                     </Pressable>
-                  </View>
-                  <Separate />
-                  <TextTitleCheckBox>Pré-exames</TextTitleCheckBox>
-                  <RowAlignCenter>
-                     {cheboxItem(item.exams?.refration !== undefined && item.exams.refration, 'refration')}
-                     <TextStyled>Refração</TextStyled>
 
-                     {cheboxItem(item.exams?.tono !== undefined && item.exams.tono, 'tono')}
-                     <TextStyled>Tonometria</TextStyled>
-                  </RowAlignCenter>
-                  <Separate />
-                  <TextTitleCheckBox>Colírios</TextTitleCheckBox>
-                  <RowAlignCenter>
-                     {cheboxItem(item.eyedrop1, 'eyedrop1')}
-                     <TextStyled>1</TextStyled>
-                     {cheboxItem(item.eyedrop2, 'eyedrop2')}
-                     <TextStyled>2</TextStyled>
-                     {cheboxItem(item.eyedrop3, 'eyedrop3')}
-                     <TextStyled>3</TextStyled>
-                  </RowAlignCenter>
-               </ModalView>
-            </ModalContainer>
-         </Modal>
-      </ModalContainer>
+   const renderItem = ({ item }: ServiceProps) => (
+      <Card style={{
+         backgroundColor: item.exams?.total === 2 ? "rgba(0,0,0,0.5)" : theme.color.fontWhite
+      }}>
+         <Row>
+            <View>
+               <TextDescription variant={VARIANT.SECONDARY}>Paciente: {item.patient}</TextDescription>
+               <TextDescription variant={VARIANT.PRIMARY}>Médico: {item.doctor}</TextDescription>
+            </View>
+            {item.exams?.total === 2 &&
+               <View style={{ position: "absolute", right: 100, top: 20 }}>
+                  <LittleBtn onPress={() => alertToFinishService(item)}>
+                     <TextButton>Concluir</TextButton>
+                  </LittleBtn>
+               </View>
+            }
+            <View style={{ justifyContent: 'center' }}>
+               <TouchableOpacity onPress={() => {
+                  setModalVisible(true)
+                  setNamePatienteModal(item.patient)
+                  setCurrentItem(item)
+               }}>
+                  <ExamImage
+                     source={require("../../assets/images/exam.png")}
+                     style={{ tintColor: theme.color.primaryDark }}
+                  />
+               </TouchableOpacity>
+            </View>
+         </Row>
+      </Card>
    )
-   function finishServiceItem(item: ItemProps) {
-      setData(data?.filter(function (value) {
-         return value.id !== item.id
-      }))
-   }
-   async function requestData() {
-      await fetchToDo<Array<ItemProps>>("/data", { method: 'GET' })
-         .then((toDoItem) => {
-            setData(toDoItem);
-            setLoad(false)
-         }).catch((error) => Alert.alert(error));
-   }
+
+   const showPreExamModal = (namePatientModal: string, item: ItemProps) => (
+      <CustomModal
+         visible={modalVisible}
+         title={namePatientModal}
+         onClose={() => setModalVisible(!modalVisible)}
+      >
+         <Separate />
+         <TextTitleCheckBox>Pré-exames</TextTitleCheckBox>
+         <RowAlignCenter>
+            <CustomCheckBox
+               itemValue={item.exams?.refration!}
+               changeValue={(newValue) => changeCurrentItem(newValue, 'refration')}
+               itemTitle={'Refração'}
+            />
+            <CustomCheckBox
+               itemValue={item.exams?.tono!}
+               changeValue={(newValue) => changeCurrentItem(newValue, 'tono')}
+               itemTitle={'Tonometria'}
+            />
+         </RowAlignCenter>
+         <Separate />
+         <TextTitleCheckBox>Colírios</TextTitleCheckBox>
+         <RowAlignCenter>
+            <CustomCheckBox
+               itemValue={item.eyedrop1}
+               changeValue={(newValue) => changeCurrentItem(newValue, 'eyedrop1')}
+               itemTitle={'1'}
+            />
+            <CustomCheckBox
+               itemValue={item.eyedrop1}
+               changeValue={(newValue) => changeCurrentItem(newValue, 'eyedrop2')}
+               itemTitle={'2'}
+            />
+            <CustomCheckBox
+               itemValue={item.eyedrop1}
+               changeValue={(newValue) => changeCurrentItem(newValue, 'eyedrop3')}
+               itemTitle={'3'}
+            />
+         </RowAlignCenter>
+      </CustomModal>
+   )
+
    useEffect(() => {
       if (isFocused) {
          requestData()
       }
    }, [isFocused])
+
    return load ? <ActivityIndicator size="large" color={theme.color.primary} /> : (
       <>
          <FlatList
             data={data}
             renderItem={renderItem}
-            keyExtractor={(item) => item.id === null ? "0" : item.id}
+            keyExtractor={(item) => item.id || "0"}
          />
-         {showModal(namePatientModal, currentItem)}
+         {showPreExamModal(namePatientModal, currentItem)}
       </>
    )
 }

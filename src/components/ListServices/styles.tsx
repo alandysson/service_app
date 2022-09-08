@@ -49,43 +49,10 @@ export const TextButton = styled(TextStyled) <IProps>`
    }}
 `
 
-export const ModalContainer = styled.View<IProps>`
-   flex: 1;
-   background-color: #f3f3f3; // i dont know why but put color.gray get different color
-   align-items: center;
-   justify-content: center;
-   ${props => {
-      if (props.variant == VARIANT.SECONDARY) {
-         return `
-          background-color: rgba(0,0,0,0.5);
-        `
-      }
-   }}
-`
-
-export const ModalView = styled.View`
-   width: 320px;
-   background-color: #fff;
-   border-radius: 3px;
-   padding: 8px;
-`
-
 export const Separate = styled.View`
    border: 0.5px solid ${theme.color.primary};
 `
 
-export const TextExit = styled(TextStyled)`
-   background-color: ${theme.color.primaryDark};
-   color: ${theme.color.fontWhite};
-   border-radius: 3px;
-   padding: 6px;
-   height: 30px;
-   font-size: 14px;
-`
-export const TitleModal = styled(TextStyled)`
-   font-size: 20px;
-   padding: 6px 0px;
-`
 export const TextTitleCheckBox = styled(TextStyled)`
    padding: 6px 0px;
 `
@@ -109,4 +76,8 @@ export const TextDescription = styled(TextStyled) <IProps>`
         `
       }
    }}
+`
+export const ExamImage = styled.Image`
+   width: 45px;
+   height: 45px;
 `
