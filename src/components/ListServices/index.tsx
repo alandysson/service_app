@@ -34,7 +34,7 @@ export const ListServices = () => {
                   <LittleBtn onPress={() => {
                      Alert.alert(
                         "O Paciente foi atendido?",
-                        "Ao clicar em concluir ele saira da lista",
+                        "Ao clicar em Sim ele será removido da lista",
                         [
                            {
                               text: "Não",
